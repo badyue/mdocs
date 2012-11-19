@@ -1,0 +1,1 @@
+var DTPath = "http://localhost/destoon/";var SKPath = "http://localhost/destoon/skin/jewe/";var EXPath = "http://localhost/destoon/extend/";var CKDomain = "";var CKPath = "/";var CKPrex = "cll_";

@@ -1,0 +1,213 @@
+{template 'header'}
+<style>
+.section{
+	padding: 20px 0;
+}
+
+.signin {
+	padding: 20px 17px 72px 27px;
+	width: 378px;
+	border: solid 1px #CACACA;
+	background-color: #FAFAFA;
+}
+.signin h2{
+	color: #333;
+	font-weight: bold;
+	padding-bottom: 40px;
+}
+.login-list li {
+	padding: 8px 0 8px 72px;
+	overflow: hidden;
+	zoom: 1;
+}
+.login-list .label {
+	display: inline;
+	float: left;
+	width: 68px;
+	margin-left: -72px;
+
+	height: 28px;
+	line-height: 28px;
+	text-align: right;
+}
+
+.login-list .input {
+	float: left;
+	display: inline;
+	width: 194px;
+	height: 28px;
+	line-height: 28px;
+	position: relative;
+}
+.login-list .f-left{
+	margin-right: 20px;
+}
+
+.login-list .i-text {
+	width: 180px;
+	height: 22px;
+	padding: 2px;
+	line-height: 22px;
+	border: 1px solid #A2A9AF;
+	vertical-align: top;
+}
+.login-list .input {
+  line-height: 28px;
+}
+.nickx {
+	display: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: white url(https://s.tbcdn.cn/apps/login/static/b2b/images/x.png) no-repeat 50% 50%;
+	position: absolute;
+	z-index: 1000;
+	cursor: pointer;
+	filter: alpha(opacity=70);
+	opacity: .7;
+}
+.nickx:hover {
+	filter: alpha(opacity=100);
+	opacity: 1;
+}
+
+.login-list .extral {
+  line-height: 28px;
+}
+
+
+.login-list .btn-login {
+	color: white;
+	font-weight: bold;
+}
+.login-list .btn {
+	display: inline-block;
+	zoom: 1;
+	width: 87px;
+	height: 29px;
+	text-align: center;
+	line-height: 29px;
+	vertical-align: middle;
+	border: none;
+	background: url(https://s.tbcdn.cn/apps/login/static/b2b/images/c.png) no-repeat 0 0;
+	cursor: pointer;
+}
+.login-list  .btn-login:hover {
+     background-position: 0 -29px;
+}
+.login-list .btn-reg {
+    color: #404040;
+    background-position: 0 -58px;
+}
+.login-list  .btn-reg:hover {
+	color: #404040;
+	text-decoration: none;
+	background-position: 0 -87px;
+}
+</style>
+
+
+<div class="section m k2-fix-float">
+	<div class="f-left feature">
+		<img src="http://img.china.alibaba.com/cms/upload/member/cnlogin/leftbanner.jpg" alt="">
+	</div>
+	<div class="f-right signin">
+		<h2>登录</h2>
+	    <form method="post" action="{$DT[file_login]}"  onsubmit="return Dcheck();">
+			<input name="forward" type="hidden" id="forward" value="{$forward}">
+            <ul class="login-list">
+                <li class="username-field">
+                    <span class="label">
+						<select name="option">
+							<option value="username">用户名</option>
+							{if $MOD[passport]}<option value="passport">通行证</option>{/if}
+							<option value="email">Email</option>
+							<option value="mobile">手机号</option>
+							<option value="company">公司名</option>
+							<option value="userid">会员ID</option>
+						</select>
+					</span>
+                    <span class="input">
+                        <input class="i-text" id="username" type="text" value="{$username}" name="username">
+              
+						<span class="nickx" href="javascript:void(0)" style="left: 168px; top: 5px; display: inline; "></span></span>
+						<span class="extral">
+						</span>
+                </li>
+                <li class="pwd-field">
+                    <span class="label">密码</span>
+                    <span class="input">
+						<input name="password" type="password" class="inp i-text"  id="password" value=""/>&nbsp;
+						<script type="text/javascript" src="{DT_PATH}file/script/md5.js"></script>
+						<script>init_md5();</script>
+                    </span>
+                    <span class="extral">
+                        <a href="send.php" target="_blank" id="J_RetrievePwd">找回密码</a>
+                    </span>
+                </li>
+				{if $MOD[captcha_login]}
+				<li class="captcha">
+				<span class="label f-left">验证码</span>
+				<div class="f-right">{template 'captcha', 'chip'}</div>
+				</li>
+				{/if}
+				<li class="k2-fix-float">
+					<div class="f-left">
+						<span><input type="checkbox" name="cookietime" value="2592000" id="cookietime"{if $MOD[login_remember]} checked{/if}></span>
+						<span><label for="cookietime">记住我</label></span>
+					</div>
+					
+					<div class="f-left">
+						<span><input type="checkbox" name="goto" value="1" id="goto"{if $MOD[login_goto]} checked{/if}></span>
+						<span><label for="goto">进入商务室</label></span>
+					</div>
+
+				</li>
+                <li class="btn-field">
+                    <button class="btn btn-login" name="submit" id="J_LoginSubmit" type="submit">登 录</button>
+                    <a href="{$DT[file_register]}?forward={urlencode($forward)}" class="btn btn-reg" id="J_Reg">免费注册</a>
+                </li>
+            </ul>
+			
+			{if $oa}
+			<h3>其他方式登录</h3>
+			<div class="s-login">
+			{loop $OAUTH $k $v}
+			{if $v[enable]}<a href="{DT_PATH}api/oauth/{$k}/connect.php" title="{$v[name]}"><img src="{DT_PATH}api/oauth/{$k}/ico.png" alt="{$v[name]}"/></a> &nbsp;{/if}
+			{/loop}
+			</div>
+			{/if}
+        </form>
+	</div>
+</div>
+
+
+<script>
+if(Dd('username').value == '') {
+	Dd('username').focus();
+} else {
+	Dd('password').focus();
+}
+function Dcheck() {
+	if(Dd('username').value == '') {
+		confirm('请输入登录名称');
+		Dd('username').focus();
+		return false;
+	}
+	if(Dd('password').value == '') {
+		confirm('请输入密码');
+		Dd('password').focus();
+		return false;
+	}
+	{if $MOD[captcha_login]}
+		if(!is_captcha(Dd('captcha').value)) {
+			confirm('请填写验证码');
+			Dd('captcha').focus();
+			return false;
+		}
+	{/if}
+}
+</script>
+{template 'footer'}
+
+

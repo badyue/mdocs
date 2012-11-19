@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="{DT_CHARSET}">
+<title>{if $seo_title}{$seo_title}{else}{if $head_title}{$head_title}{$DT[seo_delimiter]}{/if}{if $city_sitename}{$city_sitename}{else}{$DT[sitename]}{/if}{/if}</title>
+{if $head_keywords}
+<meta name="keywords" content="{$head_keywords}"/>
+{/if}
+{if $head_description}
+<meta name="description" content="{$head_description}"/>
+{/if}
+<link rel="shortcut icon" type="image/x-icon" href="{DT_PATH}favicon.ico"/>
+<link rel="bookmark" type="image/x-icon" href="{DT_PATH}favicon.ico"/>
+{if $head_canonical}
+<link rel="canonical" href="{$head_canonical}"/>
+{/if}
+<link rel="stylesheet" href="{DT_SKIN}style.css"/>
+<link rel="stylesheet" href="{DT_SKIN}share.css"/>
+{if $moduleid>4}<link rel="stylesheet" href="{DT_SKIN}{$module}.css"/>{/if}
+{if $CSS}
+{loop $CSS $css}
+<link rel="stylesheet" href="{DT_SKIN}{$css}.css"/>
+{/loop}
+{/if}
+<!--[if lte IE 6]>
+<link rel="stylesheet" type="text/css" href="{DT_SKIN}ie6.css"/>
+<![endif]-->
+{if !DT_DEBUG}<script>window.onerror=function(){return true;}</script>{/if}
+{if $itemid && $DT[anticopy]}
+<script>
+document.oncontextmenu=function(e){return false;};
+document.onselectstart=function(e){return false;};
+</script>
+{/if}
+<script src="{DT_PATH}lang/{DT_LANG}/lang.js"></script>
+<script src="{DT_PATH}file/script/config.js"></script>
+<script src="{DT_PATH}file/script/common.js"></script>
+<script src="{DT_PATH}file/script/page.js"></script>
+</head>
+<body>
+<!--main-->
+<div class="main">
+<!--顶部-->
+<div class="top">
+	<div class="k2-area k2-fix-float">
+			<div class="f-left">
+				<span>您好， 欢迎来到华东国际珠宝网！</span>
+				<!--<span><a href="login.html">请登录</a></span>
+				<span><a href="register.html">免费注册</a></span>-->
+			</div>
+			<div class="f-right" id="destoon_member"></div>
+	</div>
+</div>
+
+
+<!--头部logo和搜索-->
+<div class="header k2-single">
+	<div class="k2-area">
+		<div id="search_tips" style="display:none;"></div>
+		<div class="f_l logo">
+			<a href="{$MODULE[1][linkurl]}">
+				<img src="http://www.jewechina.com/file/upload/201211/11/19-51-12-85-1.png" alt="{$DT[sitename]}"/>
+			</a>
+		</div>
+		{php $searchid = ($moduleid > 3 && $MODULE[$moduleid]['ismenu'] && !$MODULE[$moduleid]['islink']) ? $moduleid : 5;}
+		{php $searchids = array(5,16,6,4,21,22);}
+		{if !in_array($searchid, $searchids)}
+			{php $searchids[] = $searchid;}
+		{/if}
+		<script>var searchid = {$searchid};</script>
+		<form id="destoon_search" action="{DT_PATH}search.php" onsubmit="return Dsearch();">
+			<input type="hidden" name="moduleid" value="{$searchid}" id="destoon_moduleid"/>
+			<input type="hidden" name="spread" value="0" id="destoon_spread"/>
+			<div class="f_l header-main">
+				<!--<ul id="search_module">
+					{loop $searchids $s}
+					{if isset($MODULE[$s])}<li{if $searchid == $s} class="head_search_on"{/if} onclick="setModule({$s}, this);"><span>{$MODULE[$s][name]}</span></li>{/if}
+					{/loop}
+				</ul>-->
+				<!--
+				<div>
+					<input name="kw" id="destoon_kw" type="text"  accesskey="s" class="search_i" value="请输入关键词" onfocus="if(this.value=='请输入关键词') this.value='';" onkeyup="STip(this.value);" autocomplete="off"  x-webkit-speech="" x-webkit-grammar="builtin:translate">
+					<input type="submit" value=" " class="search_s">
+				</div>-->
+				<div class="header-search k2-fix-float">
+					<div id="header-search-type" class="header-search-type f_l">
+						<div class="header-search-type-value">
+							<span id="search-type-display">
+							{loop $searchids $s}
+								{if isset($MODULE[$s])}
+									{if $searchid == $s}{$MODULE[$s][name]}{/if}
+								{/if}
+							{/loop}
+							</span>
+							<span class="header-arrow header-arrow-down header-search-type-arrow"></span>
+						</div>
+						<ul id="search-type-options" class="header-search-type-options">
+							{loop $searchids $s}
+							{if isset($MODULE[$s])}
+							<li class="header-search-type-option" data-module="{$s}"><a href="#">{$MODULE[$s][name]}</a></li>
+							{/if}
+							{/loop}
+						</ul>
+					</div>
+					<div class="header-search-main f_l">
+						<input name="kw" id="destoon_kw" type="text"  accesskey="s" class="search_i" value="请输入关键词" onfocus="if(this.value=='请输入关键词') this.value='';" onkeyup="STip(this.value);" autocomplete="off"  x-webkit-speech="" x-webkit-grammar="builtin:translate">
+						<input type="submit" value="搜索" class="search_s">
+					</div>
+				</div>
+				<ul class="hot-list">
+					<li><a href="#">精品克拉钻</a></li>
+					<li><a href="#">花式异形钻</a></li>
+					<li><a href="#">彩钻</a></li>
+					<li><a href="#">北极光裸钻</a></li>
+					<li><a href="#">时尚彩珠</a></li>
+					<li><a href="#">群花绮丽</a></li>
+					<li><a href="#">精品克拉钻</a></li>
+					<li><a href="#">花式异形钻</a></li>
+					<li><a href="#">彩钻</a></li>
+				</ul>
+			</div>
+		</form>
+	
+		<div class="search-top">
+		  <p>让卖家找上门</p>
+		  <a href="#" title="发布询价单" target="_self">
+			  <p class="more">发布询价单</p>
+		  </a>
+		</div>
+	</div>
+	
+</div>
+<!--头部end-->
+
+<!--导航-->
+<div class="nav">
+	<ul class="k2-area k2-fix-float">
+		<li{if $moduleid<4} class="current"{/if}><a href="{$MODULE[1][linkurl]}"><span>首页</span></a></li>{loop $MODULE $m}{if $m[ismenu]}<li{if $m[moduleid]==$moduleid} class="menuon"{/if}><a href="{$m[linkurl]}"{if $m[isblank]} target="_blank"{/if}><span{if $m[style]} style="color:{$m[style]};"{/if}>{$m[name]}</span></a></li>{/if}{/loop}
+	</ul>
+</div>
+<!--导航end-->

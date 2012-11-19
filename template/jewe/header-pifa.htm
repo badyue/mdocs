@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="{DT_CHARSET}">
+<title>{if $seo_title}{$seo_title}{else}{if $head_title}{$head_title}{$DT[seo_delimiter]}{/if}{if $city_sitename}{$city_sitename}{else}{$DT[sitename]}{/if}{/if}</title>
+{if $head_keywords}
+<meta name="keywords" content="{$head_keywords}"/>
+{/if}
+{if $head_description}
+<meta name="description" content="{$head_description}"/>
+{/if}
+<link rel="shortcut icon" type="image/x-icon" href="{DT_PATH}favicon.ico"/>
+<link rel="bookmark" type="image/x-icon" href="{DT_PATH}favicon.ico"/>
+{if $head_canonical}
+<link rel="canonical" href="{$head_canonical}"/>
+{/if}
+<link rel="stylesheet" href="{DT_SKIN}style.css"/>
+<link rel="stylesheet" href="{DT_SKIN}share.css"/>
+{if $moduleid>4}<link rel="stylesheet" href="{DT_SKIN}{$module}.css"/>{/if}
+{if $CSS}
+{loop $CSS $css}
+<link rel="stylesheet" href="{DT_SKIN}{$css}.css"/>
+{/loop}
+{/if}
+<!--[if lte IE 6]>
+<link rel="stylesheet" type="text/css" href="{DT_SKIN}ie6.css"/>
+<![endif]-->
+{if !DT_DEBUG}<script>window.onerror=function(){return true;}</script>{/if}
+{if $itemid && $DT[anticopy]}
+<script>
+document.oncontextmenu=function(e){return false;};
+document.onselectstart=function(e){return false;};
+</script>
+{/if}
+<script src="{DT_PATH}lang/{DT_LANG}/lang.js"></script>
+<script src="{DT_PATH}file/script/config.js"></script>
+<script src="{DT_PATH}file/script/common.js"></script>
+<script src="{DT_PATH}file/script/page.js"></script>
+</head>
+<body>
+<!--main-->
+<div class="main">
+<!--顶部-->
+<div class="top">
+	<div class="k2-area k2-fix-float">
+			<div class="f-left">
+				<span>您好， 欢迎来到华东国际珠宝网！</span>
+				<!--<span><a href="login.html">请登录</a></span>
+				<span><a href="register.html">免费注册</a></span>-->
+			</div>
+			<div class="f-right" id="destoon_member"></div>
+	</div>
+</div>
+
+
+<!--头部logo和搜索-->
+<div class="header k2-single">
+	<div class="k2-area k2-fix-float">
+		<div class="f_l logo">
+			<a href="{$MODULE[1][linkurl]}"><img src="http://www.jewechina.com/file/upload/201211/11/19-51-12-85-1.png" width= "200" height="60"></a>
+		</div>
+		<div class="f_l">
+			<img width="750" height="100" src="http://img.china.alibaba.com/cms/upload/2012/971/344/443179_1573916616.png">
+		</div>
+	</div>
+</div>
+<!--头部end-->
+
+<!--导航-->
+<div class="nav">
+	<ul class="k2-area k2-fix-float">
+		<li{if $moduleid<4} class="current"{/if}><a href="{$MODULE[1][linkurl]}"><span>首页</span></a></li>{loop $MODULE $m}{if $m[ismenu]}<li{if $m[moduleid]==$moduleid} class="menuon"{/if}><a href="{$m[linkurl]}"{if $m[isblank]} target="_blank"{/if}><span{if $m[style]} style="color:{$m[style]};"{/if}>{$m[name]}</span></a></li>{/if}{/loop}
+	</ul>
+</div>
+<!--导航end-->
