@@ -2,6 +2,7 @@
 $names = array (
   'ad' => '广告',
   'ad_code' => '广告代码',
+  'ad_list' => '广告列表',
   'ad_view' => '广告预览',
   'announce' => '公告',
   'archiver' => '无图版',

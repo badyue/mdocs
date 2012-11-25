@@ -65,9 +65,32 @@ if($action == 'ajax') {
 			$price += $r['price'];
 			$total++;			
 			$_tags[$r['itemid']] = $r;
+
 		}
 		foreach(explode(',', $itemids) as $v) {
 			if(isset($_tags[$v])) {
+
+				//@modify add pifa_price
+				$pifa_query =$db->query("SELECT * FROM " . $DT_PRE . "sell_price where itemid=$v");
+				$_tags[$v]['pifa'] = array();
+				while($item = $db->fetch_array($pifa_query)){
+					if(!$item['startcount']){
+						$label = '<= ' . $item['endcount'];
+					}else if(!$item['endcount']){
+						$label = '>= ' . $item['startcount'];
+					}else{
+						$label = $item['startcount'] . ' - ' . $item['endcount'];
+					}
+
+					$_tags[$v]['pifa'][] = array(
+						'price' => $item['price'],
+						'label' => $label,
+						'start' => $item['startcount'],
+						'end' => $item['endcount']
+					);
+				}
+				$_tags[$v]['pifaprice'] = json_encode($_tags[$v]['pifa']);
+
 				$tags[] = $_tags[$v];
 				$_itemids .= ','.$v;
 			}

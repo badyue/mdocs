@@ -1,17 +1,13 @@
 <?php defined('IN_DESTOON') or exit('Access Denied');?><?php $JS = array('lib/jquery.switchable-2.0.min', 'mall');?>
 <?php include template('header-pifa');?>
+<style>.nav{margin-bottom: 0;}</style>
 <!-- 第一部分-->
 <div class="section k2-area pifa-banner k2-fix-float">
 <div class="k2-w48 frame-category f-left">
 <ul>
-<li><a href="#">珍珠饰品</a></li>
-<li><a href="#">珍珠工艺品</a></li>
-<li><a href="#">珍珠衍生产品</a></li>
-<li><a href="#">珍珠原料</a></li>
-<li><a href="#">珍珠养殖类</a></li>
-<li><a href="#">贝壳产品</a></li>
-<li><a href="#">珍珠设备/配件</a></li>
-<li><a href="#">其它产品</a></li>
+<?php if(is_array($maincat)) { foreach($maincat as $k => $v) { ?>
+<li><a href="<?php echo $MOD['linkurl'];?><?php echo $v['linkurl'];?>"><?php echo set_style($v['catname'],$v['style']);?></a></li>
+<?php } } ?>
 </ul>
 </div>
 <div class="k2-w142 k2-fix-float f-left">

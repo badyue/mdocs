@@ -30,7 +30,6 @@ if($CP) {
 	$options = property_option($catid);
 	$values = property_value($moduleid, $itemid);
 }
-
 $adddate = timetodate($addtime, 3);
 $editdate = timetodate($edittime, 3);
 $linkurl = linkurl($MOD['linkurl'].$linkurl, 1);
@@ -60,6 +59,26 @@ if(check_group($_groupid, $MOD['group_contact'])) {
 		$user_status = 3;
 	}
 }
+/**
+ * @modify 增加价格区间
+ */
+
+$pifa_query =$db->query("SELECT * FROM " . $DT_PRE . "sell_price where itemid=$itemid");
+$pifa_price = array();
+while($item = $db->fetch_array($pifa_query)){
+	if(!$item['startcount']){
+		$label = '<= ' . $item['endcount'];
+	}else if(!$item['endcount']){
+		$label = '>= ' . $item['startcount'];
+	}else{
+		$label = $item['startcount'] . ' - ' . $item['endcount'];
+	}
+	$pifa_price[] = array(
+		'price' => $item['price'],
+		'label' => $label
+	);
+}
+
 include DT_ROOT.'/include/update.inc.php';
 $seo_file = 'show';
 include DT_ROOT.'/include/seo.inc.php';

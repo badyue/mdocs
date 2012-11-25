@@ -106,7 +106,7 @@ document.onselectstart=function(e){return false;};
 </div>
 </div>
 <ul class="hot-list">
-<li><a href="#">精品克拉钻</a></li>
+<li><?php echo ad(26, 13);?></li>
 <li><a href="#">花式异形钻</a></li>
 <li><a href="#">彩钻</a></li>
 <li><a href="#">北极光裸钻</a></li>

@@ -1,6 +1,7 @@
 <?php 
 defined('IN_DESTOON') or exit('Access Denied');
 require DT_ROOT.'/module/'.$module.'/common.inc.php';
+
 if(!$CAT || $CAT['moduleid'] != $moduleid) {
 	$head_title = lang('message->cate_not_exists');
 	@header("HTTP/1.1 404 Not Found");
@@ -23,10 +24,8 @@ if($MOD['cat_property'] && $CAT['property']) {
 	$PPT = property_condition($catid);
 }
 unset($CAT['moduleid']);
-extract($CAT);
-$maincat = get_maincat($child ? $catid : $parentid, $moduleid);
-
-$condition = 'status=3';
+$maincat = get_maincat($child ? $catid : $parentid, 16);
+$condition = 'status=3 AND ispf = 1';
 $condition .= ($CAT['child']) ? " AND catid IN (".$CAT['arrchildid'].")" : " AND catid=$catid";
 if($cityid) {
 	$areaid = $cityid;
@@ -48,20 +47,50 @@ $pagesize = $MOD['pagesize'];
 $offset = ($page-1)*$pagesize;
 $pages = listpages($CAT, $items, $page, $pagesize);
 if($items) {
+
 	$result = $db->query("SELECT ".$MOD['fields']." FROM {$table} WHERE {$condition} ORDER BY ".$MOD['order']." LIMIT {$offset},{$pagesize}", ($CFG['db_expires'] && $page == 1) ? 'CACHE' : '', $CFG['db_expires']);
+
 	while($r = $db->fetch_array($result)) {
 		$r['adddate'] = timetodate($r['addtime'], 5);
 		$r['editdate'] = timetodate($r['edittime'], 5);
 		$r['alt'] = $r['title'];
 		$r['title'] = set_style($r['title'], $r['style']);
 		$r['linkurl'] = $MOD['linkurl'].$r['linkurl'];
+		
+
+		//@modify add pifa_price
+		$v = $r['itemid'];
+		$r['pifa'] = array();
+		$pifa_query =$db->query("SELECT * FROM " . $DT_PRE . "sell_price where itemid=$v");
+		while($item = $db->fetch_array($pifa_query)){
+			if(!$item['startcount']){
+				$label = '<= ' . $item['endcount'];
+			}else if(!$item['endcount']){
+				$label = '>= ' . $item['startcount'];
+			}else{
+				$label = $item['startcount'] . ' - ' . $item['endcount'];
+			}
+
+			$r['pifa'][] = array(
+				'price' => $item['price'],
+				'label' => $label,
+				'start' => $item['startcount'],
+				'end' => $item['endcount']
+			);
+		}
+
 		$tags[] = $r;
+
+
 	}
 	$db->free_result($result);
+
+	
+
 }
+
 $showpage = 1;
 $datetype = 5;
-
 $seo_file = 'list';
 include DT_ROOT.'/include/seo.inc.php';
 

@@ -1,4 +1,4 @@
-{template 'header'}
+{template 'header-pifa'}
 <div class="m">
 <div class="left_box">		
 		<div class="pos">当前位置: <a href="{$MODULE[1][linkurl]}">首页</a> &raquo; <a href="{$MOD[linkurl]}">{$MOD[name]}</a> &raquo; {cat_pos($CAT, ' &raquo; ')} &raquo;</div>
@@ -33,8 +33,31 @@
 				<div id="imgshow" style="display:none;"></div>
 				<table width="100%" cellpadding="5" cellspacing="5">
 				<tr>
-				<td class="f_dblue">单 价：</td>
-				<td class="f_gray">￥<span class="f_price px16">{$price}</span></td>
+				<!--<td class="f_dblue">单 价：</td>
+				<td class="f_gray">￥<span class="f_price px16">{ $ price }</span></td>-->
+					
+					<td colspan="2">
+						<table class="pifa-price">
+							<style>
+							.pifa-price, .pifa-price th{border-bottom: solid 1px #eee;}
+							.pifa-price th{text-align:left;}
+							</style>
+							<thead>
+								<tr>
+									<th style="width:130px">订货量</th>
+									<th>价格</th>
+								</tr>
+							</thead>
+							<tbody>
+								{loop $pifa_price $p}
+								<tr>
+									<td><span>{$p[label]}</span></td>
+									<td><em>￥<span class="f_price px16">{$p[price]}</span></em></td>
+								</tr>
+								{/loop}
+							</tbody>
+						</table>
+					</td>
 				</tr>
 				<tr>
 				<td class="f_dblue">品 牌：</td>

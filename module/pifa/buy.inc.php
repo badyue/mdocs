@@ -76,9 +76,35 @@ if($submit) {
 		$total_amount = $good_amount - $good_discount;
 		$good_amount = sprintf('%.2f', $good_amount);
 		$good_discount = sprintf('%.2f', $good_discount);
+		
+		//@modify add pifa_prices
 		foreach(explode(',', $itemids) as $v) {
-			if(isset($_tags[$v])) $tags[] = $_tags[$v];
+			if(isset($_tags[$v])) {
+
+				//@modify add pifa_price
+				$pifa_query =$db->query("SELECT * FROM " . $DT_PRE . "sell_price where itemid=$v");
+				$_tags[$v]['pifa'] = array();
+				while($item = $db->fetch_array($pifa_query)){
+					if(!$item['startcount']){
+						$label = '<= ' . $item['endcount'];
+					}else if(!$item['endcount']){
+						$label = '>= ' . $item['startcount'];
+					}else{
+						$label = $item['startcount'] . ' - ' . $item['endcount'];
+					}
+
+					$_tags[$v]['pifa'][] = array(
+						'price' => $item['price'],
+						'label' => $label,
+						'start' => $item['startcount'],
+						'end' => $item['endcount']
+					);
+				}
+				$_tags[$v]['pifaprice'] = json_encode($_tags[$v]['pifa']);
+				$tags[] = $_tags[$v];
+			}
 		}
+
 		$result = $db->query("SELECT * FROM {$DT_PRE}address WHERE username='$_username' ORDER BY  listorder ASC,itemid ASC LIMIT 30");
 		while($r = $db->fetch_array($result)) {	
 			$address[] = $r;

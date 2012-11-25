@@ -1,4 +1,4 @@
-{template 'header'}
+{template 'header-pifa'}
 <script type="text/javascript">var sh = '{$MOD[linkurl]}search.php?catid={$catid}';</script>
 <div class="m">
 <div class="m_l_1 f_l">
@@ -77,7 +77,7 @@
 			</table>
 		</div>
 		{if $page == 1}{ad($moduleid,$catid,$kw,6)}{/if}
-		{if $tags}{template 'list-'.$module, 'tag'}{/if}
+		{if $tags}{template 'list-pifa', 'tag'}{/if}
 		<div class="tool">
 			<table>
 			<tr height="30">
