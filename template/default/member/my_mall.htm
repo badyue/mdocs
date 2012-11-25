@@ -53,7 +53,93 @@
 {/if}
 <tr>
 <td class="tl"><span class="f_red">*</span> 商品价格</td>
-<td class="tr"><input name="post[price]" type="text" size="10" value="{$price}" id="price"/><span id="dprice" class="f_red"></span></td>
+<td class="tr">
+<style>
+  input.c{ width:45px; margin-left:5px;}
+  a.delrow{ margin-left:10px; text-decoration:underline}
+</style>
+<script type="text/javascript" src="{DT_PATH}file/script/jquery-1.8.2.min.js"></script>
+<script>
+    function showpifa(a) {
+        if (a) {
+            document.getElementById("pifaprise").style.display = "";
+            addpfprice();   
+        }
+        else {
+            document.getElementById("pifaprise").style.display = "none";
+        }
+    }
+    var row_count = 0;
+    function addNew() {
+
+        var table1 = $('#cpifa');
+       
+        var firstTr = table1.find('tbody>tr:first');
+        var row = $("<tr id='tr_"+row_count+"'></tr>");
+        var td = $("<td></td>");
+        td.append($(" <input  class='c'/>-<input  class='c'/>"   )
+);
+        row.append(td);
+        var td = $("<td></td>");
+        td.append($("<input  class='c'/><select><option>元</option><option>美元</option></select>")
+);
+        row.append(td);
+        var td = $("<td></td>");
+        td.append($("<a class='delrow' href='javascript:void(0)' onclick='del(" + row_count + ")'>删除</a>")
+);
+        row.append(td);
+        table1.append(row); 
+        row_count++;
+    }
+    function del(a) {
+
+        var vNum = $("#cpifa tr").size() + 1; //表格有多少个数据行;
+        if (vNum <= 3) {
+            alert('请至少留一行');
+            return;
+        }
+        var vbtnDel = $(t); //得到点击的按钮对象
+       
+     
+        var vTr =  $("#tr_"+a); //得到父tr对象;
+       
+        if (vTr.attr("id") == "trDataRow1") {
+            alert('第一行不能删除!'); //第一行是克隆的基础，不能删除
+            return;
+        } else {
+            vTr.remove();
+        } 
+       
+    } 
+   
+</script>
+<input name="post[price]" type="text" size="10" value="{$price}" id="price"/><span id="dprice" class="f_red"></span><input type="checkbox" onchange="showpifa(this.checked)" id="ispf"  name="post[ispf]" value="1" />发布到批发<script>
+                                                                                                                                                                                                                                   
+</script></td>
+</tr>
+  <!--以下为批发价格-->
+<tr id="pifaprise" style="display:none;">
+<td class="tl">
+批发价格
+</td>
+<td class="tr">
+   <table cellpadding="0" cellspacing="0" id="cpifa" class="cpf">
+      
+       <tbody> 
+<tr id="trDataRow1"> 
+ 
+  <th style="width:100px;">
+               订货量 </th>
+            <th  style="width:100px;">
+               价格</th>
+            <td>
+                <a href="javascript:void(0)" onclick="addNew()">添加行</a></td>
+  
+</tr> 
+</tbody> 
+       
+    </table>
+</td>
 </tr>
 <tr>
 <td class="tl"><span class="f_red">*</span> 商品库存</td>
