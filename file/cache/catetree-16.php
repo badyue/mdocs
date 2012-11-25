@@ -1,1 +1,0 @@
-<option value="4">珍珠工艺品</option><option value="5">珍珠饰品</option><option value="7">&nbsp;└珍珠项链</option><option value="6">珍珠原料</option></select>
