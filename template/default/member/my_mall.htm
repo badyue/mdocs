@@ -53,7 +53,125 @@
 {/if}
 <tr>
 <td class="tl"><span class="f_red">*</span> 商品价格</td>
-<td class="tr"><input name="post[price]" type="text" size="10" value="{$price}" id="price"/><span id="dprice" class="f_red"></span></td>
+<td class="tr">
+<style>
+  input.c{ width:40px; margin-left:5px; margin-bottom:2px; margin-top:2px;}
+  a.delrow{ margin-left:10px; text-decoration:underline}
+</style>
+<script type="text/javascript" src="{DT_PATH}file/script/jquery-1.8.2.min.js"></script>
+<script>
+    function showpifa(a) {
+        if (a) {
+            document.getElementById("pifaprise").style.display = "";
+            addpfprice();   
+        }
+        else {
+            document.getElementById("pifaprise").style.display = "none";
+        }
+    }
+    var row_count = 0;
+   
+    function addNew() {
+
+        if (row_count >= 5) {
+            alert("最多只能有五条价格区间！");
+            return false;
+        }
+       
+        var table1 = $('#cpifa');
+       
+        var firstTr = table1.find('tbody>tr:first');
+        var row = $("<tr id='tr_"+row_count+"'></tr>");
+        var td = $("<td></td>");
+        td.append($(" <input  class='c' id='scount_" + row_count + "' name='post[scount_" + row_count + "]'/>-<input id='ecount_" + row_count + "' class='c'  name='post[ecount_" + row_count + "]'/>")
+);
+        row.append(td);
+        var td = $("<td></td>");
+        td.append($("<input  class='c' name='post[mprice_" + row_count + "]'  id='mprice_" + row_count + "' /><select name='post[mdolor_" + row_count + "]'    id='mdolor_" + row_count + "' ><option value='RMB'>RMB</option><option value='USD'>USD</option></select>")
+);
+        row.append(td);
+        var td = $("<td></td>");
+        td.append($("<a class='delrow' href='javascript:void(0)' onclick='del(" + row_count + ")'>删除</a>")
+);
+        row.append(td);
+        table1.append(row); 
+        row_count++;
+    }
+    function del(a) {
+
+        var vNum = $("#cpifa tr").size() + 1; //表格有多少个数据行;
+        if (vNum <= 3) {
+            alert('请至少留一行');
+            return;
+        }
+        var vbtnDel = $(t); //得到点击的按钮对象
+       
+     
+        var vTr =  $("#tr_"+a); //得到父tr对象;
+       
+        if (vTr.attr("id") == "trDataRow1") {
+            alert('第一行不能删除!'); //第一行是克隆的基础，不能删除
+            return;
+        } else {
+            vTr.remove();
+        } 
+       
+    }
+    function getMprice() {
+     
+        if ($("#ispf").is(':checked')) {
+
+           
+            if (row_count <= 0) {
+                alert("请至少添写一条批发价格信息！");
+                return false;
+            }
+         //   debugger;
+            for (var i = 0; i < row_count; i++) {
+          
+                if ($("#scount_" + i + "").val() == "" || $("#ecount_" + i + "").val() == "" || $("#mprice_" + i).val() == "" + "") {
+                    alert("请搷写完全批发价格信息！");
+                    return false;
+                }
+            }
+            var strs = "";
+           
+            for (var i = 0; i < row_count; i++) {
+
+                strs += $("#scount_" + i).val() + "," + $("#ecount_" + i).val() + "," + $("#mprice_" + i).val() + "," + $("#mdolor_" + i).val() + "|";
+            }
+            $("#mprices").val(strs);
+            
+            
+        } 
+    }
+</script>
+<input name="post[price]" type="text" size="10" value="{$price}" id="price"/><span id="dprice" class="f_red"></span><input type="checkbox" onchange="showpifa(this.checked)" id="ispf"  name="post[ispf]" value="1" />发布到批发
+<input  type="hidden" id="mprices" name="post[mprices]"/></td>
+</tr>
+  <!--以下为批发价格-->
+<tr id="pifaprise" style="display:none;">
+<td class="tl">
+批发价格
+</td>
+<td class="tr">
+   <table cellpadding="0" cellspacing="0" id="cpifa" class="cpf">
+      
+       <tbody> 
+<tr id="trDataRow1"> 
+ 
+  <th style="width:100px;">
+               订货量 </th>
+            <th  style="width:100px;">
+               价格</th>
+            <td>
+                <a href="javascript:void(0)" onclick="return addNew()" style="margin-left:10px">添加价格区间</a></td>
+  
+</tr> 
+</tbody> 
+       
+    </table>
+</td>
 </tr>
 <tr>
 <td class="tl"><span class="f_red">*</span> 商品库存</td>
@@ -170,7 +288,7 @@ var property_admin = 0;
 {/if}
 <tr>
 <td class="tl">&nbsp;</td>
-<td class="tr" height="50"><input type="submit" name="submit" value=" 提 交 " class="btn"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value=" 返 回 " class="btn" onclick="history.back(-1);"/></td>
+<td class="tr" height="50"><input type="submit" name="submit" value=" 提 交 "  onmouseover="return getMprice()" class="btn"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value=" 返 回 " class="btn" onclick="history.back(-1);"/></td>
 </tr>
 </table>
 </form>
