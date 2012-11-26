@@ -16,9 +16,9 @@ class mall {
 		$this->table_data = $table_data;
 		$this->split = $MOD['split'];
 		$this->db = &$db;
-		$this->fields = array('catid','mycatid','areaid','level','title','style','fee','introduce','brand','price','amount','thumb','thumb1','thumb2','tag','status','hits','username','editor','addtime','adddate','edittime','editdate','ip','template','linkurl','filepath','elite','note','company','truename','telephone','mobile','address','email','msn','qq','ali','skype');
+		$this->fields = array('catid','mycatid','areaid','level','title','style','fee','introduce','brand','price','amount','thumb','thumb1','thumb2','tag','status','hits','username','editor','addtime','adddate','edittime','editdate','ip','template','linkurl','filepath','elite','note','company','truename','telephone','mobile','address','email','msn','qq','ali','skype','ispf');
     }
-
+  
 	function pass($post) {
 		global $DT_TIME, $MOD;
 		if(!is_array($post)) return false;
@@ -32,6 +32,7 @@ class mall {
 	}
 
 	function set($post) {
+	 
 		global $MOD, $DT_TIME, $DT_IP, $_username, $_userid;
 		$post['editor'] = $_username;
 		$post['addtime'] = (isset($post['addtime']) && $post['addtime']) ? strtotime($post['addtime']) : $DT_TIME;
@@ -41,7 +42,9 @@ class mall {
 		$post['fee'] = dround($post['fee']);
 		$post['price'] = dround($post['price']);
 		$post['amount'] = intval($post['amount']);
+        $post['ispf'] = intval($post['ispf']);
 		$post['mycatid'] = intval($post['mycatid']);
+       $post['mprices']=  $post['mprices'] ;
 		$post['elite'] = $post['elite'] ? 1 : 0;
 		$post['title'] = trim($post['title']);
 		$post['content'] = stripslashes($post['content']);
@@ -69,6 +72,7 @@ class mall {
 			$post['content'] = dsafe($content);
 		}
 		$post['content'] = addslashes($post['content']);
+	   
 		return $post;
 	}
 
@@ -108,25 +112,46 @@ class mall {
 	}
 
 	function add($post) {
-		global $MOD;
+		 	global $MOD;
 		$post = $this->set($post);
 		$sqlk = $sqlv = '';
+		
+		
 		foreach($post as $k=>$v) {
-			if(in_array($k, $this->fields)) { $sqlk .= ','.$k; $sqlv .= ",'$v'"; }
+ 
+			if(in_array($k, $this->fields)) 
+			{ 
+					$sqlk .= ','.$k;
+					$sqlv .= ",'$v'";
+			}
+			 
 		}
         $sqlk = substr($sqlk, 1);
         $sqlv = substr($sqlv, 1);
+ 
 		$this->db->query("INSERT INTO {$this->table} ($sqlk) VALUES ($sqlv)");
 		$this->itemid = $this->db->insert_id();
+		
 		$content_table = content_table($this->moduleid, $this->itemid, $this->split, $this->table_data);
+		
 		$this->db->query("INSERT INTO {$content_table} (itemid,content) VALUES ('$this->itemid', '$post[content]')");
 		$this->update($this->itemid, $post, $post['content']);
+ 
 		if($post['status'] == 3 && $post['username'] && $MOD['credit_add']) {
 			credit_add($post['username'], $MOD['credit_add']);
 			credit_record($post['username'], $MOD['credit_add'], 'system', lang('my->credit_record_add', array($MOD['name'])), 'ID:'.$this->itemid);
 		}
 		clear_upload($post['content'].$post['thumb'].$post['thumb1'].$post['thumb2'], $this->itemid);
 		if($post['status'] > 2) $this->tohtml($this->itemid, $post['catid']);
+        //添加批发价 Edit By Michael
+        $prices=$post['mprices'];
+        $var=explode("|",$prices);
+        for($i = 0; $i <  count($var); $i++)
+        {
+             $ps=explode(",",$var[$i]);
+             $this->db->query("INSERT INTO destoon_sell_price (itemid,startcount,endcount,price,zhekou,moneytype)  VALUES ($this->itemid,$ps[0],$ps[1],$ps[2],1,'$ps[3]')");
+        }
+         //添加批发价结束
 		return $this->itemid;
 	}
 
@@ -159,11 +184,18 @@ class mall {
 		$item['itemid'] = $itemid;
 		$linkurl = itemurl($item);
 		$sql = "keyword='$keyword',linkurl='$linkurl'";
+		 
+		 
 		if($item['username']) {
+		 
 			$m = daddslashes(userinfo($item['username']));
 			if($m) $sql .= ",groupid='$m[groupid]',company='$m[company]',vip='$m[vip]',validated='$m[validated]',areaid='$m[areaid]',truename='$m[truename]',telephone='$m[telephone]',mobile='$m[mobile]',address='$m[address]',email='$m[mail]',msn='$m[msn]',qq='$m[qq]',ali='$m[ali]',skype='$m[skype]'";
+
+			 
 		}
+		
 		$this->db->query("UPDATE {$this->table} SET $sql WHERE itemid=$itemid");
+		
 	}
 
 	function recycle($itemid) {
